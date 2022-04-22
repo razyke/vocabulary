@@ -1,0 +1,82 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<?import com.jfoenix.controls.*?>
+<?import com.jfoenix.validation.*?>
+<?import javafx.geometry.*?>
+<?import javafx.scene.control.*?>
+<?import javafx.scene.layout.*?>
+<?import javafx.scene.text.*?>
+
+<GridPane fx:id="root" alignment="CENTER" maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity"
+          minWidth="-Infinity" prefHeight="400.0" prefWidth="600.0" xmlns="http://javafx.com/javafx/11.0.2"
+          xmlns:fx="http://javafx.com/fxml/1" fx:controller="org.nice.soft.vocabulary.gui.controller.MainController">
+    <columnConstraints>
+        <ColumnConstraints hgrow="SOMETIMES" maxWidth="199" minWidth="10.0" prefWidth="66"/>
+        <ColumnConstraints hgrow="SOMETIMES" maxWidth="199" minWidth="10.0" prefWidth="152"/>
+        <ColumnConstraints hgrow="SOMETIMES" maxWidth="321.6" minWidth="10.0" prefWidth="168"/>
+        <ColumnConstraints hgrow="SOMETIMES" maxWidth="186" minWidth="0.0" prefWidth="146"/>
+        <ColumnConstraints hgrow="SOMETIMES" maxWidth="186" minWidth="10.0" prefWidth="67"/>
+    </columnConstraints>
+    <rowConstraints>
+        <RowConstraints minHeight="10.0" prefHeight="30.0" vgrow="SOMETIMES"/>
+        <RowConstraints minHeight="10.0" prefHeight="30.0" vgrow="SOMETIMES"/>
+        <RowConstraints minHeight="10.0" prefHeight="30.0" vgrow="SOMETIMES"/>
+        <RowConstraints minHeight="10.0" prefHeight="30.0" vgrow="SOMETIMES"/>
+    </rowConstraints>
+    <VBox alignment="CENTER" prefHeight="200.0" prefWidth="100.0" GridPane.columnIndex="1">
+        <JFXButton buttonType="RAISED" onAction="#goToVocabularyList"
+                   style="-fx-background-color: #fcc736; -fx-cursor: hand;" text="Visit _Vocabulary"
+                   textAlignment="CENTER">
+            <font>
+                <Font name="Lucida Console" size="18.0"/>
+            </font>
+        </JFXButton>
+    </VBox>
+    <VBox alignment="CENTER" prefHeight="200.0" prefWidth="100.0" GridPane.columnIndex="3">
+        <JFXButton onAction="#goToCheckingPage" buttonType="RAISED" contentDisplay="CENTER" style="-fx-background-color: #fcc736; -fx-cursor: hand;"
+                   text="_Start check session" textAlignment="CENTER">
+            <font>
+                <Font name="Lucida Console" size="18.0"/>
+            </font>
+        </JFXButton>
+    </VBox>
+    <VBox alignment="CENTER" prefHeight="200.0" prefWidth="100.0" GridPane.columnIndex="1" GridPane.rowIndex="2">
+        <JFXTextField fx:id="word">
+            <validators>
+                <RequiredFieldValidator message="Type a word"/>
+            </validators>
+        </JFXTextField>
+    </VBox>
+    <VBox alignment="CENTER" prefHeight="200.0" prefWidth="100.0" GridPane.columnIndex="3" GridPane.rowIndex="2">
+        <JFXTextField fx:id="translation">
+            <validators>
+                <RequiredFieldValidator message="Type a translation"/>
+            </validators>
+        </JFXTextField>
+    </VBox>
+    <VBox alignment="TOP_CENTER" prefHeight="101.0" prefWidth="111.0" GridPane.columnIndex="2" GridPane.rowIndex="3">
+        <JFXButton buttonType="RAISED" onAction="#addNewVocabularyPair"
+                   style="-fx-background-color: #fcc736; -fx-cursor: hand;" text="Add a new word&#10;">
+            <font>
+                <Font name="Lucida Console" size="14.0"/>
+            </font>
+            <VBox.margin>
+                <Insets/>
+            </VBox.margin>
+        </JFXButton>
+    </VBox>
+    <VBox alignment="BOTTOM_CENTER" prefHeight="200.0" prefWidth="100.0" GridPane.columnIndex="1" GridPane.rowIndex="1">
+        <Label text="Word">
+            <font>
+                <Font size="18.0"/>
+            </font>
+        </Label>
+    </VBox>
+    <VBox alignment="BOTTOM_CENTER" prefHeight="200.0" prefWidth="100.0" GridPane.columnIndex="3" GridPane.rowIndex="1">
+        <Label text="Translation">
+            <font>
+                <Font size="18.0"/>
+            </font>
+        </Label>
+    </VBox>
+</GridPane>

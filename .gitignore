@@ -1,4 +1,9 @@
 # Project exclude paths
 /.gradle/
 /vocabulary-core/build/
+/vocabulary-core/out/
 /vocabulary-gui/build/
+/vocabulary-gui/out/
+
+.idea
+.jpb

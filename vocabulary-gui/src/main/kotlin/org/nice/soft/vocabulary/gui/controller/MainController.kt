@@ -1,7 +1,7 @@
 package org.nice.soft.vocabulary.gui.controller
 
 import com.jfoenix.controls.JFXTextField
-import io.datafx.controller.ViewController
+import io.datafx.controller.FXMLController
 import javafx.event.EventHandler
 import javafx.fxml.FXML
 import javafx.fxml.Initializable
@@ -17,7 +17,7 @@ import org.nice.soft.vocabulary.core.service.VocabularyService
 import java.net.URL
 import java.util.*
 
-@ViewController(value = "/fxml/main-page.fxml", title = "Vocabulary App")
+@FXMLController(value = "/fxml/main-page.fxml", title = "Vocabulary App")
 open class MainController : Initializable {
     private val vocabularyService = VocabularyFactory.provideInstance(VocabularyService::class.java)
 

@@ -4,7 +4,7 @@ import com.jfoenix.controls.*
 import com.jfoenix.controls.cells.editors.TextFieldEditorBuilder
 import com.jfoenix.controls.cells.editors.base.GenericEditableTreeTableCell
 import com.jfoenix.controls.datamodels.treetable.RecursiveTreeObject
-import io.datafx.controller.ViewController
+import io.datafx.controller.FXMLController
 import javafx.beans.property.SimpleStringProperty
 import javafx.collections.FXCollections
 import javafx.collections.ObservableList
@@ -22,7 +22,7 @@ import java.net.URL
 import java.util.*
 import java.util.function.Predicate
 
-@ViewController(value = "/fxml/vocabulary-list.fxml")
+@FXMLController(value = "/fxml/vocabulary-list.fxml")
 class VocabularyListController : Initializable {
     private val vocabularyService = VocabularyFactory.provideInstance(VocabularyService::class.java)
     @FXML

@@ -24,11 +24,11 @@ repositories {
 
 dependencies {
     implementation("com.jfoenix:jfoenix:9.0.10")
-    implementation("io.datafx:flow:8.0.1")
-    implementation("io.datafx:datafx:8.0.1")
+    implementation("io.datafx:flow:8.0.7")
+    implementation("io.datafx:datafx:8.0.7")
     implementation("javax.annotation:javax.annotation-api:1.3.2")
     implementation(project(":vocabulary-core"))
 
-    runtimeOnly("org.jetbrains.kotlin:kotlin-reflect:1.5.21")
-    implementation(kotlin("stdlib"))
+    runtimeOnly("org.jetbrains.kotlin:kotlin-reflect:1.6.20")
+    implementation("org.jetbrains.kotlin:kotlin-stdlib:1.6.20")
 }

@@ -2,7 +2,7 @@ package org.nice.soft.vocabulary.gui.controller
 
 import com.jfoenix.controls.JFXButton
 import com.jfoenix.controls.JFXTextField
-import io.datafx.controller.ViewController
+import io.datafx.controller.FXMLController
 import javafx.event.EventHandler
 import javafx.fxml.FXML
 import javafx.fxml.Initializable
@@ -21,7 +21,7 @@ import org.nice.soft.vocabulary.core.service.SessionCheckService
 import java.net.URL
 import java.util.*
 
-@ViewController(value = "/fxml/check.fxml")
+@FXMLController(value = "/fxml/check.fxml")
 class CheckController2 : Initializable {
     private val sessionCheck = VocabularyFactory.provideInstance(SessionCheckService::class.java)
     @FXML

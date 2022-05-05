@@ -12,17 +12,18 @@ repositories {
     mavenCentral()
 }
 
-val springVersion = "5.3.18"
+val springVersion = "5.3.19"
 dependencies {
 
     /* Spring Dependencies */
     implementation("org.springframework:spring-core:$springVersion")
     implementation("org.springframework:spring-context:$springVersion")
-    implementation("org.springframework.data:spring-data-jpa:2.6.3")
+    implementation("org.springframework.data:spring-data-jpa:2.6.4")
 
     /* DB part */
-    implementation("com.h2database:h2:2.1.210")
+    implementation("com.h2database:h2:2.1.212")
     implementation("org.hibernate:hibernate-core:5.6.7.Final")
+    implementation("org.hibernate:hibernate-validator:5.4.3.Final")
     implementation("com.zaxxer:HikariCP:5.0.1")
 
     /* Logs */
@@ -32,6 +33,6 @@ dependencies {
 
     implementation("javax.annotation:javax.annotation-api:1.3.2")
     /* kotlin */
-    runtimeOnly("org.jetbrains.kotlin:kotlin-reflect:1.6.20")
-    implementation("org.jetbrains.kotlin:kotlin-stdlib:1.6.20")
+    runtimeOnly("org.jetbrains.kotlin:kotlin-reflect:1.6.21")
+    implementation("org.jetbrains.kotlin:kotlin-stdlib:1.6.21")
 }

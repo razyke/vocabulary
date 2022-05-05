@@ -29,6 +29,6 @@ dependencies {
     implementation("javax.annotation:javax.annotation-api:1.3.2")
     implementation(project(":vocabulary-core"))
 
-    runtimeOnly("org.jetbrains.kotlin:kotlin-reflect:1.6.20")
-    implementation("org.jetbrains.kotlin:kotlin-stdlib:1.6.20")
+    runtimeOnly("org.jetbrains.kotlin:kotlin-reflect:1.6.21")
+    implementation("org.jetbrains.kotlin:kotlin-stdlib:1.6.21")
 }

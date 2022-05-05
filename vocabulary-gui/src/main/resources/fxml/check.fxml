@@ -9,7 +9,7 @@
 
 <GridPane fx:id="root" alignment="CENTER" maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity"
           minWidth="-Infinity" prefHeight="400.0" prefWidth="600.0" xmlns="http://javafx.com/javafx/11.0.2"
-          xmlns:fx="http://javafx.com/fxml/1" fx:controller="org.nice.soft.vocabulary.gui.controller.CheckController2">
+          xmlns:fx="http://javafx.com/fxml/1" fx:controller="org.nice.soft.vocabulary.gui.controller.CheckController">
     <columnConstraints>
         <ColumnConstraints hgrow="SOMETIMES" maxWidth="1.8" minWidth="10.0" prefWidth="130.0"/>
         <ColumnConstraints hgrow="SOMETIMES" maxWidth="407" minWidth="10.0" prefWidth="353"/>

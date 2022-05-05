@@ -17,14 +17,13 @@ import javafx.scene.layout.VBox
 import javafx.scene.paint.Color
 import javafx.scene.text.Font
 import org.nice.soft.vocabulary.core.VocabularyFactory
-import org.nice.soft.vocabulary.core.model.VocabularyUnit
-import org.nice.soft.vocabulary.core.service.VocabularyService
+import org.nice.soft.vocabulary.core.service.SessionCheckService
 import java.net.URL
 import java.util.*
 
 @FXMLController(value = "/fxml/check.fxml")
 class CheckController : Initializable {
-    private val vocabularyService = VocabularyFactory.provideInstance(VocabularyService::class.java)
+    private val sessionCheck = VocabularyFactory.provideInstance(SessionCheckService::class.java)
     @FXML
     private lateinit var root: GridPane
 
@@ -43,36 +42,21 @@ class CheckController : Initializable {
     @FXML
     lateinit var translation: JFXTextField
 
-    private var correctAnswerCount = 0
-    private var wrongAnswerCount = 0
-    private var skipCount = 0
-    private val checkQueue = ArrayDeque<VocabularyUnit>()
-    private lateinit var currentUnit: VocabularyUnit
-    private lateinit var answer: String
-    private lateinit var unitsList: List<VocabularyUnit>
-    private val random = Random()
-
     override fun initialize(location: URL?, resources: ResourceBundle?) {
-        unitsList = vocabularyService.findAll()
-        if (unitsList.isEmpty()) throw IllegalStateException("Should be at least one vocabulary pair")
         val checkAnswerEvent = EventHandler<KeyEvent> { if (it.code == KeyCode.ENTER) checkAnswer() }
         translation.onKeyPressed = checkAnswerEvent
-        checkQueue.addAll(unitsList.shuffled())
-        showNextPair()
         root.sceneProperty().addListener { _, _, new -> if (new != null) translation.requestFocus() }
+        showNextWord()
     }
 
     @FXML
     fun checkAnswer() {
-        if (answer.equals(translation.text, true)) {
-            correctAnswerCount++
-        } else {
-            wrongAnswerCount++
-            checkQueue.addLast(currentUnit)
+        val isNotCorrect = !sessionCheck.checkCurrent(translation.text)
+        if (isNotCorrect) {
             Toast.showError("Wrong answer", root)
         }
         clearTranslationField()
-        showNextPair()
+        showNextWord()
     }
 
     private fun clearTranslationField() {
@@ -81,22 +65,16 @@ class CheckController : Initializable {
 
     @FXML
     fun skipAnswer() {
-        skipCount++
-        showNextPair()
+        sessionCheck.skipAnswer()
+        showNextWord()
     }
 
-    private fun showNextPair() {
-        if (checkQueue.isNotEmpty()) {
-            currentUnit = checkQueue.pop()
-            if (random.nextBoolean()) {
-                word.text = currentUnit.word
-                answer = currentUnit.translation
-            } else {
-                word.text = currentUnit.translation
-                answer = currentUnit.word
-            }
-        } else {
+    private fun showNextWord() {
+        val translate = sessionCheck.wordToTranslate()
+        if (translate == null) {
             showResults()
+        } else {
+            word.text = translate
         }
     }
 
@@ -123,22 +101,23 @@ class CheckController : Initializable {
     }
 
     private fun resultPane(): GridPane {
+        val result = sessionCheck.getResult() ?: throw IllegalStateException("Not all questions are answered")
         val pane = GridPane()
         pane.add(createHbox(
             createLabel("Total words:"),
-            createLabel(unitsList.size.toString())
+            createLabel(result.totalWords.toString())
         ), 0, 0)
         pane.add(createHbox(
             createLabel("Correct:"),
-            createLabel(correctAnswerCount.toString(), Color(1 - 0.3, 1 - 0.175, 1 - 0.7, 1.0))
+            createLabel(result.correctAnswers.toString(), Color(1 - 0.3, 1 - 0.175, 1 - 0.7, 1.0))
         ), 0, 1)
         pane.add(createHbox(
             createLabel("Mistakes:"),
-            createLabel(wrongAnswerCount.toString(), Color(1 - 0.121, 1 - 0.5, 1 - 0.5, 1.0))
+            createLabel(result.wrongAnswers.toString(), Color(1 - 0.121, 1 - 0.5, 1 - 0.5, 1.0))
         ), 1, 0)
         pane.add(createHbox(
             createLabel("Skipped"),
-            createLabel(skipCount.toString(), Color(1 - 0.43, 1 - 0.424, 1 - 0.424, 1.0))
+            createLabel(result.skippedAnswers.toString(), Color(1 - 0.43, 1 - 0.424, 1 - 0.424, 1.0))
         ), 1, 1)
         pane.hgap = 40.0
         pane.vgap = 20.0

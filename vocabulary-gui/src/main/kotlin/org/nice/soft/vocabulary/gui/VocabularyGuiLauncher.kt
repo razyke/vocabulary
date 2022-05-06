@@ -8,6 +8,8 @@ import javafx.scene.Parent
 import javafx.scene.Scene
 import javafx.stage.Screen
 import javafx.stage.Stage
+import org.nice.soft.vocabulary.core.VocabularyFactory
+import org.nice.soft.vocabulary.core.service.RateService
 import org.nice.soft.vocabulary.gui.controller.ControllerUtils
 import org.nice.soft.vocabulary.gui.controller.View
 import org.nice.soft.vocabulary.gui.controller.goToNextScene
@@ -17,6 +19,7 @@ fun main() {
 }
 
 class VocabularyGuiLauncher : Application() {
+    private val rateService = VocabularyFactory.provideInstance(RateService::class.java)
 
     override fun start(stage: Stage) {
         stage.title = "Vocabulary app"
@@ -28,6 +31,7 @@ class VocabularyGuiLauncher : Application() {
         stage.scene = scene
         stage.show()
         goToNextScene(scene, View.MAIN_PAGE)
+        rateService.refreshVocabularyRate()
     }
 
     private fun applyJFXDecorator(stage: Stage, pane: Parent) = JFXDecorator(stage, pane).apply {

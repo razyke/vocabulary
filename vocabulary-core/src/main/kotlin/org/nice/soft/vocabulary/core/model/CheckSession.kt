@@ -1,8 +1,9 @@
 package org.nice.soft.vocabulary.core.model
 
+import org.nice.soft.vocabulary.core.service.RateService
 import java.util.*
 
-class CheckSession(private val pairsToCheck: List<VocabularyUnit>) {
+class CheckSession(private val pairsToCheck: List<VocabularyUnit>, private val rateService: RateService) {
     private var currentUnit: VocabularyUnit? = null
     private var translate: String? = null
     private var answer: String? = null
@@ -25,9 +26,10 @@ class CheckSession(private val pairsToCheck: List<VocabularyUnit>) {
         val isCorrect = answer.equals(userAnswer, true)
         if (isCorrect) {
             correctAnswerCount++
+            currentUnit?.let { rateService.applyCorrectAnswer(it.rate) }
         } else {
             wrongAnswerCount++
-            currentUnit?.let { checkQueue.addLast(it) }
+            currentUnit?.let { checkQueue.addLast(it); rateService.applyWrongAnswer(it.rate) }
         }
         getNextPair()
         return isCorrect

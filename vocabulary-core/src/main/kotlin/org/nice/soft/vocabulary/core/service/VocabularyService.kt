@@ -22,6 +22,12 @@ interface VocabularyService {
     fun findAll(): List<VocabularyUnit>
 
     /**
+     * Find all vocabulary pairs ordered by in rate in ASC order
+     * @return sorted entities
+     */
+    fun findAllSortedByRate(): List<VocabularyUnit>
+
+    /**
      * Create a new vocabulary pair
      * @param vocabularyUnit the pair of word and translation
      * @return the persisted entity with id

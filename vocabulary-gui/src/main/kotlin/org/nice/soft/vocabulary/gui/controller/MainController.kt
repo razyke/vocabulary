@@ -1,18 +1,27 @@
 package org.nice.soft.vocabulary.gui.controller
 
+import com.jfoenix.controls.JFXAlert
+import com.jfoenix.controls.JFXButton
+import com.jfoenix.controls.JFXDialogLayout
 import com.jfoenix.controls.JFXTextField
 import io.datafx.controller.FXMLController
 import javafx.event.EventHandler
 import javafx.fxml.FXML
 import javafx.fxml.Initializable
 import javafx.scene.Scene
+import javafx.scene.control.Label
+import javafx.scene.image.Image
+import javafx.scene.image.ImageView
 import javafx.scene.input.KeyCode
 import javafx.scene.input.KeyCodeCombination
 import javafx.scene.input.KeyCombination
 import javafx.scene.input.KeyEvent
 import javafx.scene.layout.GridPane
+import javafx.scene.layout.HBox
+import javafx.stage.Modality
 import org.nice.soft.vocabulary.core.VocabularyFactory
 import org.nice.soft.vocabulary.core.model.VocabularyUnit
+import org.nice.soft.vocabulary.core.service.UserPreferencesService
 import org.nice.soft.vocabulary.core.service.VocabularyService
 import java.net.URL
 import java.util.*
@@ -20,6 +29,7 @@ import java.util.*
 @FXMLController(value = "/fxml/main-page.fxml", title = "Vocabulary App")
 open class MainController : Initializable {
     private val vocabularyService = VocabularyFactory.provideInstance(VocabularyService::class.java)
+    private val userPreferencesService = VocabularyFactory.provideInstance(UserPreferencesService::class.java)
 
     @FXML
     private lateinit var root: GridPane
@@ -30,6 +40,9 @@ open class MainController : Initializable {
     @FXML
     private lateinit var translation: JFXTextField
 
+    @FXML
+    private lateinit var prefButton: JFXButton
+
     override fun initialize(location: URL?, resources: ResourceBundle?) {
         word.addValidation()
         translation.addValidation()
@@ -37,6 +50,7 @@ open class MainController : Initializable {
         word.onKeyPressed = addPairHandler
         translation.onKeyPressed = addPairHandler
         root.sceneProperty().addListener { _, _, new -> if (new != null) initAccelerator(new) }
+        prefButton.graphic = ImageView(Image("img/preference.png", 32.0, 30.0, true, true))
     }
 
     private fun initAccelerator(scene: Scene) {
@@ -49,11 +63,18 @@ open class MainController : Initializable {
         withValidInput {
             try {
                 vocabularyService.create(VocabularyUnit(word = word.text, translation = translation.text))
-                Toast.showInfo("Word and translation added", root)
+                Toast.showInfo("Word [${word.text}] and its translation are [${translation.text}] added", root)
+                clearInputFieldsAndMakeFocusToWord()
             } catch (exception: Exception) {
                 Toast.showError(exception.localizedMessage, root)
             }
         }
+    }
+
+    private fun clearInputFieldsAndMakeFocusToWord() {
+        word.text = ""
+        translation.text = ""
+        word.requestFocus()
     }
 
     @FXML
@@ -64,6 +85,33 @@ open class MainController : Initializable {
     @FXML
     fun goToCheckingPage() {
         goToNextScene(root.scene, View.CHECK_PAGE)
+    }
+
+    @FXML
+    fun openPreferences() {
+        val wordLimit = userPreferencesService.getWordLimit()
+        val alert = JFXAlert<Any>(root.scene.window)
+        alert.initModality(Modality.APPLICATION_MODAL)
+        alert.isOverlayClose = false
+        val label = Label("How many words to check: ")
+
+        alert.setContent(JFXDialogLayout().apply {
+            setHeading(Label("User Properties"))
+            val limitField = JFXTextField(wordLimit.toString()).apply { maxWidth = 50.0 }
+            setBody(HBox(
+                label,
+                limitField
+            ).apply { spacing = 14.0 })
+            setActions(
+                JFXButton("Cancel").apply { setOnAction { alert.hideWithAnimation() } },
+                JFXButton("Submit").apply { setOnAction {
+                    userPreferencesService.changeAmountOfWordLimit(limitField.text.toInt())
+                    alert.hideWithAnimation()
+                } },
+            )
+        })
+        alert.show()
+        label.requestFocus()
     }
 
     private fun withValidInput(action: () -> Unit) {

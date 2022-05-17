@@ -79,4 +79,7 @@
             </font>
         </Label>
     </VBox>
+    <VBox alignment="TOP_RIGHT" prefHeight="200.0" prefWidth="100.0" GridPane.columnIndex="4">
+        <JFXButton fx:id="prefButton" onAction="#openPreferences" ripplerFill="#dadada"/>
+    </VBox>
 </GridPane>

@@ -12,7 +12,8 @@ repositories {
     mavenCentral()
 }
 
-val springVersion = "5.3.19"
+val springVersion = "5.3.20"
+val aspectJVersion = "1.9.9.1"
 dependencies {
 
     /* Spring Dependencies */
@@ -31,7 +32,11 @@ dependencies {
     implementation("ch.qos.logback:logback-classic:1.2.11")
     implementation("ch.qos.logback:logback-core:1.2.11")
 
+    /* Other */
     implementation("javax.annotation:javax.annotation-api:1.3.2")
+    implementation("org.aspectj:aspectjrt:$aspectJVersion")
+    implementation("org.aspectj:aspectjweaver:$aspectJVersion")
+
     /* kotlin */
     runtimeOnly("org.jetbrains.kotlin:kotlin-reflect:1.6.21")
     implementation("org.jetbrains.kotlin:kotlin-stdlib:1.6.21")

@@ -31,7 +31,12 @@ class RateServiceImpl(private val vocabularyService: VocabularyService) : RateSe
                 it.rate.currentUnitRate = previousRate - 10 + fixRate
                 it.rate.currentUnitRate = adjustBorder(it.rate.currentUnitRate)
                 it.rate.refreshDate = LocalDate.now()
-                log.info("Degrade the word's score with id {} from {} to {}", it.id, previousRate, it.rate.currentUnitRate)
+                log.info(
+                    "Degrade the word's score with id {} from {} to {}",
+                    it.id,
+                    previousRate,
+                    it.rate.currentUnitRate
+                )
             }
     }
 

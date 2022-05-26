@@ -29,6 +29,13 @@ class UserPreferencesServiceImpl(private val userPreferencesRepository: UserPref
 
     override fun getWordLimit() = getUserPreferences().amountOfWordToCheckLimit
 
+    override fun changeDegradeModifier(newDegrade: Int) {
+        val preferences = getUserPreferences()
+        preferences.degradeModifier = newDegrade
+    }
+
+    override fun getDegradeModifier() = getUserPreferences().degradeModifier
+
     private fun getUserPreferences() = userPreferencesRepository.findById(1)
         .orElseThrow { IllegalStateException("Can't find the user's preferences") }
 }

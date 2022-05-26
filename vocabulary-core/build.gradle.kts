@@ -25,6 +25,8 @@ dependencies {
     implementation("com.h2database:h2:2.1.212")
     implementation("org.hibernate:hibernate-core:5.6.7.Final")
     implementation("org.hibernate:hibernate-validator:5.4.3.Final")
+    implementation("javax.el:javax.el-api:3.0.0")
+    implementation("org.glassfish.web:javax.el:2.2.6")
     implementation("com.zaxxer:HikariCP:5.0.1")
 
     /* Logs */

@@ -22,4 +22,16 @@ interface UserPreferencesService {
      * @return its value
      */
     fun getWordLimit(): Int
+
+    /**
+     * Update new value for degrade modifier when unit pairs need to downgrade rate
+     * @param newDegrade new degrade value
+     */
+    fun changeDegradeModifier(newDegrade: Int)
+
+    /**
+     * Get the degrade modifier
+     * @return its value
+     */
+    fun getDegradeModifier(): Int
 }

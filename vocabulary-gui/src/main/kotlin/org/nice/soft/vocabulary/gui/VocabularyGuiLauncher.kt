@@ -33,8 +33,8 @@ class VocabularyGuiLauncher : Application() {
         stage.scene = scene
         stage.show()
         goToNextScene(scene, View.MAIN_PAGE)
-        rateService.refreshVocabularyRate()
         userPreferencesService.init()
+        rateService.refreshVocabularyRate()
     }
 
     private fun applyJFXDecorator(stage: Stage, pane: Parent) = JFXDecorator(stage, pane).apply {

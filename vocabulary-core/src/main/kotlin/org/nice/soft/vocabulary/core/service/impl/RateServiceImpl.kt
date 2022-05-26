@@ -3,6 +3,7 @@ package org.nice.soft.vocabulary.core.service.impl
 import org.nice.soft.vocabulary.core.model.DateCoefficient
 import org.nice.soft.vocabulary.core.model.Rate
 import org.nice.soft.vocabulary.core.service.RateService
+import org.nice.soft.vocabulary.core.service.UserPreferencesService
 import org.nice.soft.vocabulary.core.service.VocabularyService
 import org.slf4j.LoggerFactory.getLogger
 import org.springframework.stereotype.Service
@@ -10,7 +11,10 @@ import org.springframework.transaction.annotation.Transactional
 import java.time.LocalDate
 
 @Service
-class RateServiceImpl(private val vocabularyService: VocabularyService) : RateService {
+class RateServiceImpl(
+    private val vocabularyService: VocabularyService,
+    private val userPreferencesService: UserPreferencesService
+) : RateService {
     private val log = getLogger(RateServiceImpl::class.java)
 
     @Transactional
@@ -21,6 +25,7 @@ class RateServiceImpl(private val vocabularyService: VocabularyService) : RateSe
 
     @Transactional
     override fun refreshVocabularyRate() {
+        val degradeModifier = userPreferencesService.getDegradeModifier()
         vocabularyService.findAll().asSequence()
             .filter {
                 it.rate.lastExamDate?.let { d -> if (d == LocalDate.now()) return@filter false }
@@ -28,7 +33,7 @@ class RateServiceImpl(private val vocabularyService: VocabularyService) : RateSe
             .forEach {
                 val fixRate = fixation(it.rate)
                 val previousRate = it.rate.currentUnitRate
-                it.rate.currentUnitRate = previousRate - 10 + fixRate
+                it.rate.currentUnitRate = previousRate - degradeModifier + fixRate
                 it.rate.currentUnitRate = adjustBorder(it.rate.currentUnitRate)
                 it.rate.refreshDate = LocalDate.now()
                 log.info(

@@ -8,6 +8,8 @@ import io.datafx.controller.FXMLController
 import javafx.event.EventHandler
 import javafx.fxml.FXML
 import javafx.fxml.Initializable
+import javafx.geometry.Insets
+import javafx.geometry.Pos
 import javafx.scene.Scene
 import javafx.scene.control.Label
 import javafx.scene.image.Image
@@ -18,6 +20,7 @@ import javafx.scene.input.KeyCombination
 import javafx.scene.input.KeyEvent
 import javafx.scene.layout.GridPane
 import javafx.scene.layout.HBox
+import javafx.scene.layout.VBox
 import javafx.stage.Modality
 import org.nice.soft.vocabulary.core.VocabularyFactory
 import org.nice.soft.vocabulary.core.model.VocabularyUnit
@@ -90,28 +93,40 @@ open class MainController : Initializable {
     @FXML
     fun openPreferences() {
         val wordLimit = userPreferencesService.getWordLimit()
+        val degradeModifier = userPreferencesService.getDegradeModifier()
         val alert = JFXAlert<Any>(root.scene.window)
         alert.initModality(Modality.APPLICATION_MODAL)
         alert.isOverlayClose = false
-        val label = Label("How many words to check: ")
-
+        val header = Label("User Properties")
+        val (wordsLimitBox, limitField) = createLabelPlusInputBox("How many words to check: ", wordLimit.toString())
+        val (degradeBox, degradeField) = createLabelPlusInputBox("Change degrade modifier: ", degradeModifier.toString())
         alert.setContent(JFXDialogLayout().apply {
-            setHeading(Label("User Properties"))
-            val limitField = JFXTextField(wordLimit.toString()).apply { maxWidth = 50.0 }
-            setBody(HBox(
-                label,
-                limitField
-            ).apply { spacing = 14.0 })
+            setHeading(header)
+            setBody(VBox(
+                wordsLimitBox,
+                degradeBox
+            ).apply { spacing = 50.0 })
             setActions(
                 JFXButton("Cancel").apply { setOnAction { alert.hideWithAnimation() } },
                 JFXButton("Submit").apply { setOnAction {
-                    userPreferencesService.changeAmountOfWordLimit(limitField.text.toInt())
-                    alert.hideWithAnimation()
+                    try {
+                        userPreferencesService.changeAmountOfWordLimit(limitField.text.toInt())
+                        userPreferencesService.changeDegradeModifier(degradeField.text.toInt())
+                        alert.hideWithAnimation()
+                    } catch (e: Exception) {
+                        Toast.showError(e.localizedMessage, root)
+                    }
                 } },
             )
         })
         alert.show()
-        label.requestFocus()
+        header.requestFocus()
+    }
+
+    private fun createLabelPlusInputBox(label: String, fieldInput: String): Pair<HBox, JFXTextField> {
+        val field = JFXTextField(fieldInput).apply { maxWidth = 50.0; alignment = Pos.CENTER }
+        return HBox(Label(label).apply { padding = Insets(5.0, 0.0, 0.0, 0.0) }, field)
+            .apply { spacing = 9.0 } to field
     }
 
     private fun withValidInput(action: () -> Unit) {

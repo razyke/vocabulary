@@ -60,17 +60,17 @@ object Toast {
 
     fun showError(message: String, node: Node) {
         val popup = createPopup(message, true)
-        show(node, popup)
+        show(node, popup, 4200.0)
     }
 
-    private fun show(node: Node, popup: Popup) {
+    private fun show(node: Node, popup: Popup, duration: Double = 1800.0) {
         val stage = node.scene.window as Stage
         popup.setOnShown {
             popup.x = (stage.x + stage.width / 2 - popup.width / 2)
             popup.y = (stage.y + stage.height / 1.1 - popup.height / 2)
         }
         popup.show(stage)
-        Timeline(KeyFrame(Duration.millis(1800.0), { popup.hide() })).play()
+        Timeline(KeyFrame(Duration.millis(duration), { popup.hide() })).play()
     }
 
 }

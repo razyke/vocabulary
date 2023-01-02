@@ -4,6 +4,7 @@ plugins {
     kotlin("jvm")
     id("org.openjfx.javafxplugin") version "0.0.10"
     application
+    java
 }
 
 application {
@@ -29,6 +30,16 @@ dependencies {
     implementation("javax.annotation:javax.annotation-api:1.3.2")
     implementation(project(":vocabulary-core"))
 
-    runtimeOnly("org.jetbrains.kotlin:kotlin-reflect:1.6.21")
-    implementation("org.jetbrains.kotlin:kotlin-stdlib:1.6.21")
+    runtimeOnly("org.jetbrains.kotlin:kotlin-reflect:1.7.22")
+    implementation("org.jetbrains.kotlin:kotlin-stdlib:1.7.22")
 }
+
+tasks.jar {
+    archiveBaseName.set("vocabulary")
+    manifest {
+        attributes["Main-Class"] = "org.nice.soft.vocabulary.gui.VocabularyGuiLauncherKt"
+    }
+    from(configurations.runtimeClasspath.get().map { if (it.isDirectory) it else zipTree(it) })
+}
+
+tasks.withType<org.gradle.jvm.tasks.Jar> { duplicatesStrategy = DuplicatesStrategy.INCLUDE}

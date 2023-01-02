@@ -59,6 +59,7 @@ open class MainController : Initializable {
     private fun initAccelerator(scene: Scene) {
         scene.accelerators[KeyCodeCombination(KeyCode.W, KeyCombination.ALT_DOWN)] = Runnable{ word.requestFocus() }
         scene.accelerators[KeyCodeCombination(KeyCode.T, KeyCombination.ALT_DOWN)] = Runnable{ translation.requestFocus() }
+        word.requestFocus()
     }
 
     @FXML

@@ -30,4 +30,12 @@ interface SessionCheckService {
      * @return score if exam is finished or null if not all translations are complete
      */
     fun getResult(): Score?
+
+    /**
+     * Get current right answer for vocabulary unit
+     * May return null if no more words to check
+     *
+     * @return right answer or null
+     */
+    fun getRightAnswer(): String?
 }

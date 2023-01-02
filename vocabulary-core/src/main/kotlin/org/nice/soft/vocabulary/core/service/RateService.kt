@@ -8,14 +8,18 @@ import org.nice.soft.vocabulary.core.model.Rate
 interface RateService {
 
     /**
-     * Calculate and return new rate on the correct answer scenario
+     * Calculate and return new rate on the wrong answer scenario
+     * @param rate current rate
+     * @return new rate
      */
-    fun applyWrongAnswer(rate: Rate)
+    fun applyWrongAnswer(rate: Rate): Rate
 
     /**
-     * Calculate and return new rate on the wrong answer scenario
+     * Calculate and return new rate on the correct answer scenario
+     * @param rate current rate
+     * @return new rate
      */
-    fun applyCorrectAnswer(rate: Rate)
+    fun applyCorrectAnswer(rate: Rate): Rate
 
     /**
      * Refresh vocabulary pairs rate depends on how long ago was checking

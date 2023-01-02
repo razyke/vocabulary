@@ -17,7 +17,7 @@ class VocabularyServiceImpl(@Autowired private val repository: VocabularyPairRep
 
     override fun findAll(): List<VocabularyUnit> = repository.findAll().toList()
 
-    override fun findAllSortedByRate() = repository.findAllOrderByRate()
+    override fun findAllSortedByRate() = repository.findAllByOrderByRateCurrentUnitRateAscRateLastExamDateAsc()
 
     override fun create(vocabularyUnit: VocabularyUnit): VocabularyUnit = repository.save(vocabularyUnit)
 

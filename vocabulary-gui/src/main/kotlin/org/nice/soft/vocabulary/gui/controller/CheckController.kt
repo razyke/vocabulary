@@ -53,7 +53,7 @@ class CheckController : Initializable {
     fun checkAnswer() {
         val isNotCorrect = !sessionCheck.checkCurrent(translation.text)
         if (isNotCorrect) {
-            Toast.showError("Wrong answer", root)
+            Toast.showError("Wrong answer, the right one is [${sessionCheck.getRightAnswer()}]", root)
         }
         clearTranslationField()
         showNextWord()

@@ -17,10 +17,8 @@ class RateServiceImpl(
 ) : RateService {
     private val log = getLogger(RateServiceImpl::class.java)
 
-    @Transactional
     override fun applyCorrectAnswer(rate: Rate) = calculateNewRate(rate, true)
 
-    @Transactional
     override fun applyWrongAnswer(rate: Rate) = calculateNewRate(rate, false)
 
     @Transactional
@@ -28,7 +26,7 @@ class RateServiceImpl(
         val degradeModifier = userPreferencesService.getDegradeModifier()
         vocabularyService.findAll().asSequence()
             .filter {
-                it.rate.lastExamDate?.let { d -> if (d == LocalDate.now()) return@filter false }
+                if (it.rate.lastExamDate == null || it.rate.lastExamDate == LocalDate.now()) return@filter false
                 it.rate.refreshDate == null || it.rate.refreshDate!! < LocalDate.now() }
             .forEach {
                 val fixRate = fixation(it.rate)
@@ -45,11 +43,13 @@ class RateServiceImpl(
             }
     }
 
-    private fun calculateNewRate(rate: Rate, correct: Boolean) {
-        if (correct) rate.correct += 1 else rate.wrong += 1
-        rate.currentUnitRate += fixation(rate) + if (correct) 10.0 else -10.0
-        rate.currentUnitRate = adjustBorder(rate.currentUnitRate)
-        rate.lastExamDate = LocalDate.now()
+    private fun calculateNewRate(rate: Rate, correct: Boolean): Rate {
+        val newRate = Rate.createCopy(rate)
+        if (correct) newRate.correct += 1 else newRate.wrong += 1
+        newRate.currentUnitRate += fixation(newRate) + if (correct) 10.0 else -10.0
+        newRate.currentUnitRate = adjustBorder(newRate.currentUnitRate)
+        newRate.lastExamDate = LocalDate.now()
+        return newRate
     }
 
     private fun adjustBorder(unitRate: Double) = when {
@@ -62,6 +62,6 @@ class RateServiceImpl(
         val difference = rate.correct - rate.wrong
         val dateCoefficient = DateCoefficient.get(rate.lastExamDate)
         if (difference == 0) return 0.0
-        return dateCoefficient * (difference / (rate.correct + rate.wrong) * 10)
+        return dateCoefficient * (difference.toDouble() / (rate.correct + rate.wrong) * 10)
     }
 }

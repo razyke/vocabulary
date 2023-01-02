@@ -16,7 +16,6 @@ import javafx.scene.input.MouseEvent
 import javafx.scene.layout.StackPane
 import javafx.util.Callback
 import org.nice.soft.vocabulary.core.VocabularyFactory
-import org.nice.soft.vocabulary.core.model.VocabularyUnit as Vocabulary
 import org.nice.soft.vocabulary.core.service.VocabularyService
 import java.net.URL
 import java.util.*
@@ -49,10 +48,10 @@ class VocabularyListController : Initializable {
         removeButton.isDisable = true
         wordColumn.cellValueFactory = Callback { it.value.value.word }
         wordColumn.cellFactory = Callback { GenericEditableTreeTableCell(TextFieldEditorBuilder()) }
-        wordColumn.onEditCommit = updateVocabulary(true)
+        wordColumn.onEditCommit = updateVocabularyWord()
         translationColumn.cellValueFactory = Callback { it.value.value.translation }
         translationColumn.cellFactory = Callback { GenericEditableTreeTableCell(TextFieldEditorBuilder()) }
-        translationColumn.onEditCommit = updateVocabulary(false)
+        translationColumn.onEditCommit = updateVocabularyTranslation()
         initTable()
         setUpFocusForRemovePair()
         setUpSearchField()
@@ -71,13 +70,21 @@ class VocabularyListController : Initializable {
         }
     }
 
-    private fun updateVocabulary(isWordUpdate: Boolean): EventHandler<TreeTableColumn.CellEditEvent<ObservableVocabularyUnit, String>> {
-        return EventHandler {
-            val item = it.treeTableView.getTreeItem(it.treeTablePosition.row).value
-            val unit = Vocabulary(item.word.value, item.translation.value).apply { id = item.id }
-            if (isWordUpdate) unit.word = it.newValue else unit.translation = it.newValue
-            vocabularyService.update(unit)
-            if (isWordUpdate) item.word.set(it.newValue) else item.translation.set(it.newValue)
+    private fun updateVocabularyWord(): EventHandler<TreeTableColumn.CellEditEvent<ObservableVocabularyUnit, String>> {
+        return EventHandler { event ->
+            val uiVocabularyUnit = event.treeTablePosition.treeItem.value
+            val dbVocabularyUnit = vocabularyService.find(uiVocabularyUnit.id)
+            vocabularyService.update(dbVocabularyUnit.apply { word = event.newValue })
+            uiVocabularyUnit.word.set(event.newValue)
+        }
+    }
+
+    private fun updateVocabularyTranslation(): EventHandler<TreeTableColumn.CellEditEvent<ObservableVocabularyUnit, String>> {
+        return EventHandler { event ->
+            val uiVocabularyUnit = event.treeTablePosition.treeItem.value
+            val dbVocabularyUnit = vocabularyService.find(uiVocabularyUnit.id)
+            vocabularyService.update(dbVocabularyUnit.apply { translation = event.newValue })
+            uiVocabularyUnit.translation.set(event.newValue)
         }
     }
 

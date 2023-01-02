@@ -15,14 +15,14 @@ class VocabularyUnit(
     @Column(name = "translation")
     var translation: String
 ) {
-    @OneToOne(cascade = [CascadeType.ALL], orphanRemoval = true)
-    @MapsId
-    var rate: Rate = Rate()
-
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     @Column(name = "id", nullable = false)
     var id: Long? = null
+
+    @OneToOne(cascade = [CascadeType.ALL], orphanRemoval = true)
+    @JoinColumn(name = "rate_id", referencedColumnName = "id")
+    var rate: Rate = Rate()
 
     override fun toString(): String {
         return "VocabularyUnit(id=$id, word='$word', translation='$translation')"
@@ -37,5 +37,15 @@ class VocabularyUnit(
     }
 
     override fun hashCode(): Int = javaClass.hashCode()
+
+    companion object {
+        fun createCopy(vocabularyUnit: VocabularyUnit?): VocabularyUnit? {
+            if (vocabularyUnit == null) return null
+            return VocabularyUnit(vocabularyUnit.word, vocabularyUnit.translation).apply {
+                id = vocabularyUnit.id
+                rate = Rate.createCopy(vocabularyUnit.rate)
+            }
+        }
+    }
 }
 

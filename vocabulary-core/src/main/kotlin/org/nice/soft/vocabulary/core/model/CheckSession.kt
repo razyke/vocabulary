@@ -4,9 +4,9 @@ import org.nice.soft.vocabulary.core.service.RateService
 import java.util.*
 
 class CheckSession(private val pairsToCheck: List<VocabularyUnit>, private val rateService: RateService) {
+    var answer: String? = null
     private var currentUnit: VocabularyUnit? = null
     private var translate: String? = null
-    private var answer: String? = null
     private var correctAnswerCount = 0
     private var skippedAnswerCount = 0
     private var wrongAnswerCount = 0
@@ -22,17 +22,18 @@ class CheckSession(private val pairsToCheck: List<VocabularyUnit>, private val r
         return translate
     }
 
-    fun checkAnswer(userAnswer: String): Boolean {
+    fun checkAnswer(userAnswer: String): Pair<Boolean, VocabularyUnit?> {
         val isCorrect = answer.equals(userAnswer, true)
         if (isCorrect) {
             correctAnswerCount++
-            currentUnit?.let { rateService.applyCorrectAnswer(it.rate) }
+            currentUnit?.let { it.rate = rateService.applyCorrectAnswer(it.rate) }
         } else {
             wrongAnswerCount++
-            currentUnit?.let { checkQueue.addLast(it); rateService.applyWrongAnswer(it.rate) }
+            currentUnit?.let { checkQueue.addLast(it); it.rate = rateService.applyWrongAnswer(it.rate) }
         }
+        val updatableEntity = VocabularyUnit.createCopy(currentUnit)
         getNextPair()
-        return isCorrect
+        return isCorrect to updatableEntity
     }
 
     fun skipAnswer() {

@@ -8,6 +8,7 @@ import org.springframework.stereotype.Component
 
 @Aspect
 @Component
+@Suppress("unused")
 class LogAdvice {
 
     @Around("execution(* org.nice.soft.vocabulary.core.service.*.*(..))")

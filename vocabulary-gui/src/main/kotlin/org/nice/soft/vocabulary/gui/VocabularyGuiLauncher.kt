@@ -37,7 +37,7 @@ class VocabularyGuiLauncher : Application() {
         rateService.refreshVocabularyRate()
     }
 
-    private fun applyJFXDecorator(stage: Stage, pane: Parent) = JFXDecorator(stage, pane).apply {
+    private fun applyJFXDecorator(stage: Stage, pane: Parent) = JFXDecorator(stage, pane, false, true, true).apply {
         isCustomMaximize = true
         graphic = SVGGlyph("M43 140L5 5L43 14L61 113L79 14L117 5L79 140H43Z")
     }

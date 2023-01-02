@@ -31,8 +31,13 @@ class SingleCheckSession(
 
     override fun wordToTranslate() = session.getWordToTranslate()
 
+    override fun getRightAnswer() = session.answer
+
     override fun checkCurrent(answer: String): Boolean {
-        val isCorrect = session.checkAnswer(answer)
+        val (isCorrect, vocabularyUnit) = session.checkAnswer(answer)
+        if (vocabularyUnit != null) {
+            vocabularyService.update(vocabularyUnit)
+        }
         if (isCorrect) {
             log.info("The '{}' is correct answer", answer)
         } else {
